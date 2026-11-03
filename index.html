@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="description" content="A monochrome, top-down retro pocket cricket game.">
+<title>Pocket Cricket — Monochrome</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M8 8h16v16H8z' fill='white'/%3E%3C/svg%3E">
+<style>
+:root{color-scheme:dark;--black:#000;--white:#fff}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--black);color:var(--white);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+body{display:flex;justify-content:center;padding:16px 12px calc(18px + env(safe-area-inset-bottom))}
+button{font:inherit;color:var(--white);background:var(--black);border:2px solid var(--white);border-radius:0;padding:12px 14px;min-height:46px;touch-action:manipulation}
+button:active,button:focus-visible{background:var(--white);color:var(--black);outline:none}
+button:focus-visible{outline:2px dotted var(--white);outline-offset:4px}
+.app{width:min(100%,620px);display:flex;flex-direction:column;gap:12px}
+header{text-align:center;border-bottom:1px dotted var(--white);padding:4px 0 12px}
+h1{font-size:clamp(21px,5vw,30px);letter-spacing:3px;margin:0 0 5px}
+.sub{font-size:11px;letter-spacing:2px}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--white)}
+.stat{text-align:center;padding:8px 3px;border-right:1px dotted var(--white)}
+.stat:last-child{border:0}
+.stat span{display:block;font-size:10px;letter-spacing:1px}
+.stat strong{display:block;font-size:19px;margin-top:4px}
+.screen{border:2px solid var(--white);padding:7px;background:var(--black)}
+canvas{display:block;width:100%;height:auto;aspect-ratio:3/4;image-rendering:pixelated;background:#000;touch-action:manipulation}
+.status{min-height:38px;text-align:center;border:1px dotted var(--white);padding:10px 6px;font-size:12px;line-height:1.4}
+.controls{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:8px}
+.controls button{font-size:12px}
+.controls .hit{font-weight:900;letter-spacing:1px}
+.aim{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.aim button{min-height:42px;padding:8px}
+.help{font-size:11px;line-height:1.7;border-top:1px dotted var(--white);padding-top:10px}
+.help b{font-weight:900}
+.footer{text-align:center;font-size:10px;letter-spacing:1px;opacity:1}
+@media(min-width:520px){body{padding-top:24px}.screen{padding:10px}.help{font-size:12px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header><h1>POCKET CRICKET</h1><div class="sub">MONOCHROME EDITION · 1-BIT PIXEL GAME</div></header>
+<section class="scoreboard" aria-label="Match score">
+<div class="stat"><span>RUNS</span><strong id="runs">0</strong></div>
+<div class="stat"><span>WICKETS</span><strong id="wickets">0</strong></div>
+<div class="stat"><span>BALLS</span><strong id="balls">0/18</strong></div>
+<div class="stat"><span>LAST</span><strong id="last">—</strong></div>
+</section>
+<div class="screen"><canvas id="field" width="240" height="320" aria-label="Top-down pixel cricket field. Tap the field or press space to swing the bat."></canvas></div>
+<div class="status" id="status" aria-live="polite">READY. Choose a shot direction, then swing when the ball reaches the crease.</div>
+<div class="aim" aria-label="Shot direction">
+<button data-aim="-1">◀ LEFT</button><button data-aim="0">▲ STRAIGHT</button><button data-aim="1">RIGHT ▶</button>
+</div>
+<div class="controls">
+<button id="start">START / NEXT</button><button id="reset">NEW MATCH</button><button class="hit" id="hit">SWING ●</button>
+</div>
+<div class="help"><b>HOW TO PLAY</b><br>Wait for the ball to approach the bottom crease, then press <b>SPACE</b> or <b>SWING</b>. Choose LEFT, STRAIGHT, or RIGHT to direct your shot. A well-timed hit sends the ball across the field; its dotted path and landing point are shown. Miss the timing and you may lose a wicket.<br><b>KEYS:</b> ← / A = left · ↑ / W = straight · → / D = right · SPACE = swing · ENTER = start / next ball</div>
+<div class="footer">NO COLOURS. NO CHARACTERS. JUST CRICKET IN PIXELS.</div>
+</main>
+<script>
+(()=>{
+'use strict';
+const canvas=document.getElementById('field'),ctx=canvas.getContext('2d');
+const $=id=>document.getElementById(id);
+const W=240,H=320;
+let runs=0,wickets=0,balls=0,aim=0,phase='ready',ball=null,trail=[],landing=null,last='—',message='READY. Choose a shot direction, then swing when the ball reaches the crease.',raf=0,overMessage='';
+const rand=(a,b)=>Math.random()*(b-a)+a;
+function pixel(x,y,size=2){ctx.fillRect(Math.round(x/2)*2,Math.round(y/2)*2,size,size)}
+function text(t,x,y,align='center'){ctx.textAlign=align;ctx.fillText(t,x,y)}
+function draw(){
+ ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';
+ // Dotted oval boundary
+ for(let a=0;a<Math.PI*2;a+=.105){pixel(120+104*Math.cos(a),160+146*Math.sin(a),2)}
+ // Pitch and dotted markings
+ for(let y=48;y<273;y+=7)pixel(119,y,2);
+ for(let x=78;x<=162;x+=6){pixel(x,74,2);pixel(x,250,2)}
+ ctx.setLineDash([2,5]);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(77,74,86,176);ctx.setLineDash([]);
+ // Creases
+ for(let x=69;x<=171;x+=5){pixel(x,84,2);pixel(x,240,2)}
+ // Wickets: abstract three tiny pixel stumps
+ for(let x of [112,120,128]){ctx.fillRect(x,232,2,9);ctx.fillRect(x,82,2,9)}
+ // Aim indicator
+ ctx.font='7px monospace';text('SHOT: '+(['LEFT','STRAIGHT','RIGHT'][aim+1]),120,18);
+ // Previous shot trajectory
+ if(trail.length>1){ctx.fillStyle='#fff';for(let i=0;i<trail.length;i+=2){const p=trail[i];pixel(p.x,p.y,2)}}
+ if(landing){ctx.fillStyle='#fff';for(let r=0;r<4;r++){for(let a=0;a<Math.PI*2;a+=Math.PI/2)pixel(landing.x+Math.cos(a)*r*2,landing.y+Math.sin(a)*r*2,2)}pixel(landing.x-2,landing.y-2,4);ctx.font='7px monospace';text('LANDING',landing.x,Math.max(30,landing.y-9))}
+ // Bat, as a tiny pixel cluster only
+ ctx.fillStyle='#fff';
+ const bx=120+aim*23,by=263;
+ ctx.fillRect(bx-2,by-10,4,20);ctx.fillRect(bx-4,by-13,8,5);ctx.fillRect(bx-1,by+8,2,7);
+ // Incoming ball
+ if(ball&&phase==='bowled'){pixel(ball.x,ball.y,4);pixel(ball.x-2,ball.y-2,2)}
+ // Score / instruction footer on screen
+ ctx.font='8px monospace';text('• • •  POCKET LEAGUE  • • •',120,306);
+ if(phase==='over'){ctx.font='bold 13px monospace';text('INNINGS COMPLETE',120,151);ctx.font='8px monospace';text('PRESS NEW MATCH',120,166)}
+}
+function updateHud(){ $('runs').textContent=runs;$('wickets').textContent=wickets;$('balls').textContent=balls+'/18';$('last').textContent=last;$('status').textContent=message; }
+function setMessage(s){message=s;$('status').textContent=s}
+function beginBall(){
+ if(phase==='over')return;
+ phase='bowled';trail=[];landing=null;ball={x:120+rand(-28,28),y:102,vx:rand(-.16,.16),vy:1.15,age:0,swung:false};setMessage('BALL IN PLAY — WATCH THE CREASE.');cancelAnimationFrame(raf);animate();
+}
+function animate(){
+ if(phase!=='bowled')return;
+ ball.age++;ball.x+=ball.vx;ball.y+=ball.vy;ball.vy+=.012;
+ draw();
+ if(ball.y>=230){phase='ready';balls++;wickets++;last='W';setMessage('BOWLED! The ball passed the bat. Press START / NEXT.');updateHud();draw();checkOver();return}
+ raf=requestAnimationFrame(animate);
+}
+function swing(){
+ if(phase!=='bowled'||!ball||ball.swung)return;
+ ball.swung=true;
+ const distance=Math.abs(ball.y-224);
+ const quality=Math.max(0,1-distance/48);
+ if(quality<.16){phase='ready';balls++;wickets++;last='W';setMessage('MISS! The timing was too early or too late.');updateHud();draw();checkOver();return}
+ cancelAnimationFrame(raf);phase='shot';balls++;
+ const power=quality>.78?rand(78,115):rand(42,76);
+ const start={x:ball.x,y:ball.y};
+ const endX=Math.max(16,Math.min(224,120+aim*power+rand(-18,18)));
+ const endY=Math.max(25,Math.min(190,155-quality*65+rand(-22,22)));
+ trail=[];
+ for(let i=0;i<=34;i++){const t=i/34;trail.push({x:start.x+(endX-start.x)*t,y:start.y+(endY-start.y)*t-Math.sin(t*Math.PI)*(18+quality*16)})}
+ landing={x:endX,y:endY};
+ let scored;
+ if(quality>.82&&Math.abs(endX-120)>76)scored=6;
+ else if(quality>.65&&Math.abs(endX-120)>50)scored=4;
+ else if(quality>.55)scored=3;
+ else if(quality>.35)scored=2;
+ else scored=1;
+ runs+=scored;last=String(scored);
+ setMessage((scored===6?'SIX!':scored===4?'FOUR!':'+'+scored+' RUNS!')+' Shot path and landing point displayed. Press START / NEXT.');
+ updateHud();draw();checkOver();
+}
+function checkOver(){if(balls>=18||wickets>=5){phase='over';setMessage('INNINGS COMPLETE — '+runs+' RUNS. Press NEW MATCH to play again.');draw()}}
+function start(){if(phase==='over'){setMessage('INNINGS COMPLETE. Start a NEW MATCH.');return}if(phase==='bowled'){setMessage('THE BALL IS ALREADY IN PLAY — SWING!');return}beginBall()}
+function reset(){cancelAnimationFrame(raf);runs=0;wickets=0;balls=0;aim=0;phase='ready';ball=null;trail=[];landing=null;last='—';setMessage('NEW MATCH. Press START / NEXT to bowl.');updateHud();draw()}
+document.querySelectorAll('[data-aim]').forEach(b=>b.addEventListener('click',()=>{aim=Number(b.dataset.aim);draw()}));
+$('hit').addEventListener('click',swing);$('start').addEventListener('click',start);$('reset').addEventListener('click',reset);
+canvas.addEventListener('pointerdown',e=>{if(phase==='bowled')swing();else if(phase==='ready')start()});
+document.addEventListener('keydown',e=>{
+ if(['ArrowLeft','ArrowRight','ArrowUp',' ','Enter'].includes(e.key))e.preventDefault();
+ if(e.repeat)return;
+ if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){aim=-1;draw()}
+ else if(e.key==='ArrowRight'||e.key.toLowerCase()==='d'){aim=1;draw()}
+ else if(e.key==='ArrowUp'||e.key.toLowerCase()==='w'){aim=0;draw()}
+ else if(e.code==='Space')swing();
+ else if(e.key==='Enter')start();
+});
+updateHud();draw();
+})();
+</script>
+</body>
+</html>
