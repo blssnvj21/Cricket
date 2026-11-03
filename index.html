@@ -154,7 +154,7 @@ function draw(){
 function finishBall(result,runCount=0){
  if(state==='over')return;
  balls++;runs+=runCount;last=result;overLog.push(result);history.push({ball:balls,result,runs:runCount});
- delivery=null;shot=null;state='ready';update();
+ delivery=null;if(shot)shot.finished=true;state='ready';update();
  if(wickets>=5||(maxOvers>0&&balls>=maxOvers*6)){
    state='over';$('status').textContent='INNINGS COMPLETE — '+runs+'/'+wickets+' IN '+Math.floor(balls/6)+'.'+balls%6+' OVERS.';beep(760,.15);
  }else{$('status').textContent=result==='W'?'WICKET! PRESS NEXT BALL.':result==='0'?'DOT BALL. PRESS NEXT BALL.':result+' RUN'+(runCount===1?'':'S')+'! PRESS NEXT BALL.'}
@@ -217,11 +217,11 @@ function loop(now){
    const closest=Math.min(...fielders.map(f=>Math.hypot(f.x-shot.x,f.y-shot.y)));
    // Lofted ball may be caught before it reaches the ground.
    if(shot.loft&&t>.42&&t<.88&&closest<9){
-     wickets++;finishBall('W',0);$('status').textContent='CAUGHT! A FIELDER TAKES THE CATCH.';beep(170,.14);return
+     wickets++;shot.finished=true;finishBall('W',0);$('status').textContent='CAUGHT!' A FIELDER TAKES THE CATCH.';beep(170,.14);return
    }
    if(boundaryPoint(shot.x,shot.y)){
      const six=shot.loft&&shot.power>.55;
-     finishBall(six?'6':'4',six?6:4);beep(six?900:720,.1);return
+     shot.finished=true;finishBall(six?'6':'4',six?6:4);beep(six?900:720,.1);return
    }
    if(t>=1){
      shot.finished=true;
@@ -231,7 +231,7 @@ function loop(now){
      else if(shot.power>.78)score=3;
      else if(shot.power>.43)score=2;
      else score=1;
-     finishBall(String(score),score);return
+     shot.finished=true;finishBall(String(score),score);return
    }
  }
  draw();raf=requestAnimationFrame(loop);
