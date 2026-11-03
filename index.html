@@ -217,7 +217,7 @@ function loop(now){
    const closest=Math.min(...fielders.map(f=>Math.hypot(f.x-shot.x,f.y-shot.y)));
    // Lofted ball may be caught before it reaches the ground.
    if(shot.loft&&t>.42&&t<.88&&closest<9){
-     wickets++;shot.finished=true;finishBall('W',0);$('status').textContent='CAUGHT!' A FIELDER TAKES THE CATCH.';beep(170,.14);return
+     wickets++;shot.finished=true;finishBall('W',0);$('status').textContent='CAUGHT! A FIELDER TAKES THE CATCH.';beep(170,.14);return
    }
    if(boundaryPoint(shot.x,shot.y)){
      const six=shot.loft&&shot.power>.55;
