@@ -3,268 +3,126 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#000000">
-<meta name="description" content="Pocket Cricket is a playable top-down 2D cricket batting game in a classic monochrome LCD style.">
-<title>Pocket Cricket — 2D Cricket Game</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M7 7h18v18H7z' fill='white'/%3E%3C/svg%3E">
+<meta name="theme-color" content="#101827">
+<meta name="description" content="Build your cricket club, train players, set tactics and compete in a static cricket management game.">
+<title>Wicket Club — Cricket Manager</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101827'/%3E%3Cpath d='M16 12h7v40h-7zm13 0h7v40h-7zm13 0h7v40h-7z' fill='%23fff'/%3E%3C/svg%3E">
 <style>
-:root{color-scheme:dark;--bg:#000;--fg:#fff}
-*{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--bg);color:var(--fg);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
-body{display:flex;justify-content:center;padding:14px 10px calc(20px + env(safe-area-inset-bottom))}
-button,select{font:inherit;color:var(--fg);background:var(--bg);border:2px solid var(--fg);border-radius:0;min-height:44px;padding:9px 12px}
-button{touch-action:manipulation;cursor:pointer}
-button:active,button:focus-visible,select:focus-visible{background:var(--fg);color:var(--bg);outline:2px dotted var(--fg);outline-offset:3px}
-button:disabled{opacity:.4}
-.app{width:min(100%,720px);display:grid;gap:11px}
-header{text-align:center;border-bottom:1px dotted var(--fg);padding:4px 0 11px}
-h1{font-size:clamp(22px,5vw,32px);letter-spacing:4px;margin:0 0 5px}
-.sub{font-size:10px;letter-spacing:2px}
-.topbar{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.field{display:grid;gap:4px;font-size:10px;letter-spacing:1px}
-.field select{width:100%;font-size:12px}
-.score{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--fg)}
-.stat{text-align:center;padding:7px 2px;border-right:1px dotted var(--fg);min-width:0}
-.stat:last-child{border:0}
-.stat span{display:block;font-size:9px;letter-spacing:1px}
-.stat strong{display:block;font-size:clamp(15px,4vw,21px);margin-top:4px;overflow:hidden}
-.gameframe{border:2px solid var(--fg);padding:5px;position:relative}
-canvas{display:block;width:100%;height:auto;aspect-ratio:360/520;background:#000;touch-action:manipulation;image-rendering:pixelated}
-.status{min-height:42px;border:1px dotted var(--fg);display:grid;place-items:center;text-align:center;padding:9px 8px;font-size:11px;line-height:1.5}
-.row{display:grid;gap:7px}
-.aim{grid-template-columns:repeat(3,1fr)}
-.actions{grid-template-columns:1fr 1fr 1.25fr}
-.extras{grid-template-columns:repeat(3,1fr)}
-.row button{font-size:11px;padding:8px 4px}
-.hit{font-weight:900;letter-spacing:1px}
-.selected{background:#fff;color:#000}
-.info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.panel{border:1px solid var(--fg);padding:9px;min-width:0}
-.panel h2{font-size:10px;letter-spacing:1px;margin:0 0 7px}
-.panel p{font-size:10px;line-height:1.5;margin:3px 0}
-.log{font-size:10px;line-height:1.8;overflow-wrap:anywhere}
-.log span{display:inline-block;border:1px solid var(--fg);padding:1px 4px;margin:2px}
-.help{border-top:1px dotted var(--fg);padding-top:9px;font-size:10px;line-height:1.7}
-footer{text-align:center;font-size:9px;letter-spacing:1px}
-@media(min-width:600px){.app{gap:13px}.gameframe{padding:8px}.help{font-size:11px}}
-@media(max-width:380px){.stat span{font-size:8px}.panel{padding:7px}.topbar{gap:6px}}
+:root{--bg:#0b1220;--panel:#121e30;--panel2:#18283e;--line:#293c55;--text:#edf4ff;--muted:#91a4bd;--green:#8be0ae;--lime:#c7f36b;--gold:#ffd37b;--red:#ff8585;--blue:#8fc5ff;--radius:16px}
+*{box-sizing:border-box}html{background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -20%,#203956 0,transparent 55%),var(--bg)}button,input,select{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:#20334c;color:var(--text);border-radius:11px;padding:10px 14px;font-weight:700;transition:.15s}button:hover{filter:brightness(1.15);transform:translateY(-1px)}button:disabled{opacity:.4;cursor:not-allowed;transform:none}.primary{background:var(--lime);color:#17220b;border-color:var(--lime)}.soft{background:transparent}.danger{color:var(--red)}.app{max-width:1160px;margin:auto;padding:18px 16px 50px}.top{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px}.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:var(--lime);color:#18240b;display:grid;place-items:center;font-size:25px;font-weight:1000}.brand h1{font-size:21px;letter-spacing:-.6px;margin:0}.brand p{margin:3px 0 0;color:var(--muted);font-size:12px}.resources{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}.resource{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:9px 12px;font-size:12px;color:var(--muted)}.resource b{color:var(--text);font-size:14px;margin-left:5px}.nav{display:flex;gap:7px;overflow:auto;padding:5px 0 13px;margin-bottom:14px}.nav button{white-space:nowrap;background:transparent;color:var(--muted);border-color:transparent}.nav button.active{background:var(--panel2);color:var(--text);border-color:var(--line)}.view{display:none}.view.active{display:block}.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:14px}.card{background:linear-gradient(145deg,rgba(24,40,62,.98),rgba(17,29,46,.98));border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:0 12px 30px #0002}.eyebrow{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--green);font-weight:900}.hero h2{font-size:clamp(25px,4vw,38px);line-height:1.08;letter-spacing:-1.4px;margin:9px 0}.hero p{color:var(--muted);line-height:1.6;font-size:13px;max-width:620px}.hero-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.club-mark{height:100%;min-height:190px;display:grid;place-items:center;text-align:center;background:radial-gradient(circle at 50% 40%,#314d39,#172b32 55%,#121e30 75%);border:1px solid #3a594b;border-radius:13px}.club-mark .ball{width:90px;height:90px;border:3px solid #e9f3df;border-radius:50%;display:grid;place-items:center;font-size:40px;box-shadow:0 0 35px #9edb6d44}.club-mark strong{display:block;margin-top:12px;letter-spacing:2px}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:14px 0}.metric{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:13px}.metric span{display:block;color:var(--muted);font-size:11px}.metric b{display:block;font-size:23px;margin-top:5px}.section-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:22px 0 11px}.section-head h2{font-size:18px;margin:0}.section-head p{color:var(--muted);font-size:11px;margin:4px 0 0}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.player-list{display:grid;gap:8px}.player{display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;background:#0f1a2a;border:1px solid var(--line);border-radius:12px;padding:10px}.avatar{width:40px;height:40px;border-radius:12px;background:#253d55;display:grid;place-items:center;font-weight:900;color:var(--lime)}.player h3{font-size:13px;margin:0}.player small{color:var(--muted);font-size:10px}.rating{font-size:18px;font-weight:900;color:var(--lime)}.pill{display:inline-block;border:1px solid var(--line);border-radius:30px;padding:3px 8px;font-size:10px;color:var(--muted);margin:3px 3px 0 0}.bar{height:7px;border-radius:20px;background:#26374b;overflow:hidden;margin-top:6px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--green),var(--lime));border-radius:20px}.notice{border:1px solid #42583a;background:#1b2c25;color:#d9f5d0;border-radius:12px;padding:11px 13px;font-size:12px;line-height:1.5;margin:12px 0}.muted{color:var(--muted)}.small{font-size:11px;line-height:1.5}.match-layout{display:grid;grid-template-columns:1fr 310px;gap:13px}.scoreboard{background:#0d1826;border:1px solid var(--line);border-radius:14px;padding:16px}.scoreline{display:flex;justify-content:space-between;gap:10px;align-items:center}.scoreline strong{font-size:clamp(27px,5vw,42px);letter-spacing:-1px}.scoreline span{color:var(--muted);font-size:12px}.pitch{margin:15px 0;background:radial-gradient(ellipse at center,#3a7149,#1d4737 72%,#16382f);border:1px solid #4e8260;border-radius:13px;min-height:220px;position:relative;overflow:hidden;display:grid;place-items:center}.pitch:before{content:"";position:absolute;width:75%;height:75%;border:1px dashed #b8e6b477;border-radius:50%}.pitch-strip{width:24%;height:74%;background:#b4a17c;border-left:2px dashed #eee1c2;border-right:2px dashed #eee1c2;display:flex;justify-content:space-between;align-items:center;flex-direction:column;padding:13px 0;z-index:1}.stumps{font-size:18px;color:#fff}.ball-dot{width:11px;height:11px;background:#f7e5ce;border:2px solid #a84646;border-radius:50%;position:absolute;left:50%;top:25%;box-shadow:0 0 14px #fff9}.match-controls{display:grid;gap:9px}.control-label{font-size:11px;color:var(--muted);font-weight:800}.choice{display:flex;gap:6px;flex-wrap:wrap}.choice button{font-size:11px;padding:8px 10px}.choice button.selected{border-color:var(--lime);background:#33482b;color:#e7ffc5}.commentary{min-height:90px;background:#0d1826;border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;line-height:1.6}.feed{display:grid;gap:7px}.feed-item{display:flex;justify-content:space-between;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);font-size:11px}.feed-item:last-child{border:0}.market-card{display:flex;flex-direction:column;gap:9px}.market-card .player{grid-template-columns:40px 1fr}.market-card button{margin-top:auto}.tag-good{color:var(--green)}.tag-warn{color:var(--gold)}.league-row{display:grid;grid-template-columns:30px 1fr 42px 42px 42px;gap:8px;align-items:center;padding:11px 9px;border-bottom:1px solid var(--line);font-size:12px}.league-row.head{color:var(--muted);font-size:10px;text-transform:uppercase}.league-row.you{background:#243b2d;border-radius:9px}.input{width:100%;background:#0d1826;border:1px solid var(--line);border-radius:10px;padding:11px;color:var(--text)}.footer{margin-top:25px;text-align:center;color:#71849b;font-size:10px;line-height:1.7}.toast{position:fixed;left:50%;bottom:20px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--lime);color:#15200a;border-radius:12px;padding:11px 16px;font-size:12px;font-weight:900;box-shadow:0 8px 30px #0008;transition:.2s;z-index:5;max-width:90vw;text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}.empty{padding:20px;text-align:center;color:var(--muted);font-size:12px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}.club-mark{min-height:145px}.match-layout{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.grid3{grid-template-columns:1fr 1fr}.resources{gap:5px}.resource{padding:8px}.top{align-items:flex-start}.brand h1{font-size:18px}}
+@media(max-width:430px){.app{padding:12px 10px 35px}.top{flex-direction:column}.resources{width:100%;justify-content:flex-start}.resource{flex:1;text-align:center}.grid2{grid-template-columns:1fr}.grid3{grid-template-columns:1fr}.card{padding:14px}.league-row{grid-template-columns:22px 1fr 32px 32px 32px;padding:9px 5px;font-size:11px}}
 </style>
 </head>
 <body>
-<main class="app">
-<header><h1>POCKET CRICKET</h1><div class="sub">2D CRICKET · MONOCHROME LCD EDITION</div></header>
-<section class="topbar">
-<label class="field">MATCH LENGTH<select id="length"><option value="2">2 OVERS · QUICK MATCH</option><option value="5">5 OVERS</option><option value="10">10 OVERS</option><option value="0">PRACTICE · UNLIMITED</option></select></label>
-<label class="field">BOWLING DIFFICULTY<select id="difficulty"><option value="easy">EASY</option><option value="normal" selected>NORMAL</option><option value="hard">HARD</option></select></label>
+<div class="app">
+<header class="top">
+ <div class="brand"><div class="logo">W</div><div><h1>WICKET CLUB</h1><p>Build your club. Make cricket history.</p></div></div>
+ <div class="resources"><div class="resource">🪙 Coins <b id="coins">1,200</b></div><div class="resource">⚡ Training <b id="training">3</b></div><div class="resource">🏆 Rank <b id="rank">#4</b></div></div>
+</header>
+<nav class="nav" aria-label="Main navigation">
+ <button class="active" data-view="home">Clubhouse</button><button data-view="squad">Squad</button><button data-view="match">Match day</button><button data-view="market">Scouting</button><button data-view="league">League</button>
+</nav>
+<main>
+<section class="view active" id="view-home">
+ <div class="hero">
+  <div class="card"><div class="eyebrow">WELCOME TO THE DUGOUT</div><h2>Every great club starts with a bold first innings.</h2><p>Manage your squad, train future stars, outthink the opposition and climb the table. Your decisions shape the club — one delivery at a time.</p><div class="hero-actions"><button class="primary" data-go="match">▶ Play next match</button><button data-go="squad">Manage squad</button></div></div>
+  <div class="club-mark"><div><div class="ball">🏏</div><strong id="clubBadge">YOUR CLUB</strong><div class="small muted">EST. SEASON ONE</div></div></div>
+ </div>
+ <div class="stats"><div class="metric"><span>League position</span><b id="homeRank">4th</b></div><div class="metric"><span>Matches played</span><b id="played">0</b></div><div class="metric"><span>Wins</span><b id="wins">0</b></div><div class="metric"><span>Team rating</span><b id="teamRating">67</b></div></div>
+ <div class="grid2">
+  <div class="card"><div class="section-head"><div><h2>Next fixture</h2><p>Your next league challenge</p></div><span class="pill">ROUND <b id="roundNo">1</b>/6</span></div><div class="scoreline"><div><span>YOUR CLUB</span><h2 id="homeClubName">Wicket Wanderers</h2></div><strong>VS</strong><div style="text-align:right"><span>OPPOSITION</span><h2 id="nextOpponent">River City XI</h2></div></div><p class="small muted" id="fixtureHint">Two-over exhibition format · Set your tactics and take the field.</p><button class="primary" data-go="match">Prepare for match →</button></div>
+  <div class="card"><div class="section-head"><div><h2>Club bulletin</h2><p>Latest updates from your staff</p></div></div><div class="feed" id="bulletin"><div class="feed-item"><span>Welcome bonus received</span><b class="tag-good">+1,200 coins</b></div><div class="feed-item"><span>Training facility ready</span><b class="tag-good">3 sessions</b></div><div class="feed-item"><span>Season one begins</span><b>ROUND 1</b></div></div></div>
+ </div>
+ <div class="section-head"><div><h2>Players to watch</h2><p>Your current top performers</p></div><button class="soft" data-go="squad">Full squad →</button></div>
+ <div class="grid3" id="featured"></div>
 </section>
-<section class="score" aria-label="Scoreboard">
-<div class="stat"><span>SCORE</span><strong id="score">0/0</strong></div>
-<div class="stat"><span>OVERS</span><strong id="overs">0.0</strong></div>
-<div class="stat"><span>RUN RATE</span><strong id="rate">0.00</strong></div>
-<div class="stat"><span>LAST</span><strong id="last">—</strong></div>
-<div class="stat"><span>TARGET</span><strong id="target">—</strong></div>
+<section class="view" id="view-squad">
+ <div class="section-head"><div><div class="eyebrow">THE DRESSING ROOM</div><h2>Your squad</h2><p>Train your players and shape a balanced XI.</p></div><span class="pill" id="squadCount">11 / 15 PLAYERS</span></div>
+ <div class="grid2"><div class="card"><h2 style="margin-top:0">Squad overview</h2><div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="metric"><span>Batting</span><b id="batAvg">70</b></div><div class="metric"><span>Bowling</span><b id="bowlAvg">65</b></div></div><p class="small muted">Choose a player to spend one training session. Each session improves one skill by two points.</p><div class="notice">Training sessions refresh at the start of a new season. Keep a mix of batters, bowlers and all-rounders.</div></div><div class="card"><h2 style="margin-top:0">Club identity</h2><label class="control-label" for="clubNameInput">TEAM NAME</label><input id="clubNameInput" class="input" maxlength="24" value="Wicket Wanderers"><p class="small muted">This name appears on your match screens and league table.</p><button id="saveName" class="primary">Save club name</button></div></div>
+ <div class="section-head"><div><h2>First-team players</h2><p>Tap train to develop a skill.</p></div></div><div class="player-list" id="squadList"></div>
 </section>
-<section class="gameframe"><canvas id="game" width="360" height="520" aria-label="Top-down two-dimensional cricket field. Use the swing button when the ball approaches the batting crease."></canvas></section>
-<div class="status" id="status" aria-live="polite">PRESS START INNINGS. WATCH THE BALL AND TIME YOUR SHOT.</div>
-<div class="row aim" aria-label="Shot direction">
-<button data-dir="-1">◀ OFF SIDE</button><button data-dir="0" class="selected">▲ STRAIGHT</button><button data-dir="1">LEG SIDE ▶</button>
-</div>
-<div class="row actions">
-<button id="start">START INNINGS</button><button id="pause">PAUSE</button><button id="swing" class="hit">SWING BAT ●</button>
-</div>
-<div class="row extras">
-<button id="sound">SOUND: OFF</button><button id="scorecard">SCORECARD</button><button id="new">NEW INNINGS</button>
-</div>
-<section class="info">
-<div class="panel"><h2>THIS OVER</h2><div class="log" id="overlog">Waiting for first delivery.</div></div>
-<div class="panel"><h2>CONTROLS</h2><p>← / A: off side</p><p>↑ / W: straight</p><p>→ / D: leg side</p><p>SPACE: swing</p><p>ENTER: next ball · P: pause</p></div>
+<section class="view" id="view-match">
+ <div class="section-head"><div><div class="eyebrow">MATCH DAY</div><h2 id="matchTitle">Ready for the toss?</h2><p id="matchSubtitle">Your next opponent is waiting.</p></div><span class="pill" id="matchRound">ROUND 1</span></div>
+ <div class="match-layout">
+  <div class="card">
+   <div class="scoreboard"><div class="scoreline"><div><span id="battingLabel">YOUR CLUB</span><strong id="matchScore">0/0</strong></div><div style="text-align:right"><span>OVERS</span><strong id="matchOvers">0.0</strong></div></div><div class="scoreline"><span id="inningsLabel">FIRST INNINGS · 2 OVERS</span><span id="targetLabel">TARGET —</span></div></div>
+   <div class="pitch"><div class="pitch-strip"><div class="stumps">▥</div><div class="stumps">▥</div></div><div class="ball-dot" id="ballDot"></div></div>
+   <div class="commentary" id="commentary">The umpire checks the field. Your opening pair walks out. Press <b>Start innings</b> when you're ready.</div>
+   <div class="section-head"><div><h2>Ball-by-ball</h2><p>Recent deliveries</p></div></div><div class="choice" id="ballHistory"><span class="pill">No balls bowled yet</span></div>
+  </div>
+  <aside class="card match-controls">
+   <h2 style="margin:0">Dugout tactics</h2><div><div class="control-label">BATTING APPROACH</div><div class="choice" id="batTactics"><button class="selected" data-bat="balanced">Balanced</button><button data-bat="careful">Careful</button><button data-bat="attack">Attack</button></div></div>
+   <div><div class="control-label">SHOT SELECTION</div><div class="choice" id="shotTactics"><button class="selected" data-shot="ground">Ground</button><button data-shot="loft">Lofted</button><button data-shot="placement">Placement</button></div></div>
+   <div><div class="control-label">BOWLING PLAN (OPPONENT INNINGS)</div><div class="choice" id="bowlTactics"><button class="selected" data-bowl="line">Tight line</button><button data-bowl="pace">Pace</button><button data-bowl="spin">Spin</button></div></div>
+   <button id="playBall" class="primary">▶ Start innings</button><button id="nextDelivery" disabled>Play next delivery</button>
+   <div class="notice" id="matchTip">Tip: Balanced batting is reliable. Attack can score quickly, but increases the chance of losing a wicket.</div>
+   <button class="soft" id="forfeitMatch">Return to clubhouse</button>
+  </aside>
+ </div>
 </section>
-<div class="help"><b>HOW TO PLAY</b><br>Start the innings. The bowler sends a delivery towards your wicket. Pick a shot direction and swing as the ball reaches the batting crease. Timing, direction and field placement affect the result. Lofted shots can be caught; ground shots can be stopped; the boundary gives four and a shot clearing it gives six. Five wickets end the innings. Overs contain six legal balls.</div>
-<footer>BLACK & WHITE ONLY · TOP-DOWN 2D · TOUCH + KEYBOARD</footer>
+<section class="view" id="view-market">
+ <div class="section-head"><div><div class="eyebrow">SCOUTING NETWORK</div><h2>Transfer market</h2><p>Find a missing piece for your squad. Signings cost coins.</p></div><span class="pill">SQUAD LIMIT 15</span></div>
+ <div class="notice">Scouting refreshes after you sign a player. You can hold up to 15 players. Player names and ratings are fictional game characters.</div>
+ <div class="grid3" id="marketList"></div>
+</section>
+<section class="view" id="view-league">
+ <div class="section-head"><div><div class="eyebrow">SEASON ONE</div><h2>Club championship</h2><p>Six rounds. Every result matters.</p></div><span class="pill" id="leagueStatus">IN PROGRESS</span></div>
+ <div class="grid2"><div class="card"><h2 style="margin-top:0">League table</h2><div class="league-row head"><span>#</span><span>CLUB</span><span>P</span><span>W</span><span>PTS</span></div><div id="leagueTable"></div></div><div class="card"><h2 style="margin-top:0">Season record</h2><div class="stats" style="grid-template-columns:repeat(2,1fr)"><div class="metric"><span>Played</span><b id="leaguePlayed">0</b></div><div class="metric"><span>Points</span><b id="leaguePoints">0</b></div><div class="metric"><span>Won</span><b id="leagueWins">0</b></div><div class="metric"><span>Lost</span><b id="leagueLosses">0</b></div></div><p class="small muted">A win earns 3 points. A tie earns 1 point. Finish in the top two to claim the season trophy.</p><button id="newSeason" class="primary" disabled>Start next season</button></div></div>
+ <div class="section-head"><div><h2>Recent results</h2><p>Your match history</p></div></div><div class="card" id="resultsList"><div class="empty">No results yet. Your first fixture awaits.</div></div>
+</section>
 </main>
+<footer class="footer">WICKET CLUB · A FAN-MADE CRICKET MANAGEMENT GAME<br>Static HTML · CSS · JavaScript · No account or server required<br>Game progress lasts for this browser session and resets when the page is refreshed.</footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
 <script>
-(()=>{
-'use strict';
-const $=id=>document.getElementById(id),canvas=$('game'),ctx=canvas.getContext('2d');
-const W=360,H=520,CX=180,CY=260,TAU=Math.PI*2;
-const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),rand=(a,b)=>a+Math.random()*(b-a);
-let maxOvers=2,difficulty='normal',runs=0,wickets=0,balls=0,last='—',direction=0,state='menu',delivery=null,shot=null,fielders=[],overLog=[],history=[],pausedState='',sound=false,audio=null,raf=0,lastFrame=0,batSwing=0;
-const speed={easy:.82,normal:1,hard:1.2};
-function beep(f=520,d=.06){if(!sound)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=f;g.gain.value=.025;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+d);o.stop(audio.currentTime+d)}catch(e){}}
-function pixel(x,y,s=3){ctx.fillRect(Math.round(x/3)*3,Math.round(y/3)*3,s,s)}
-function txt(t,x,y,size=10,align='center'){ctx.font=size+'px monospace';ctx.textAlign=align;ctx.fillText(t,x,y)}
-function boundaryPoint(x,y){return Math.hypot((x-CX)/157,(y-CY)/224)>=1}
-function makeFielders(){
- const spots=[[72,112],[288,112],[48,222],[312,222],[82,345],[278,345],[180,75],[180,190]];
- return spots.map(([x,y],i)=>({x,y,homeX:x,homeY:y,id:i}));
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const names=['Aarav Mehta','Kabir Rao','Ishaan Das','Dev Malhotra','Arjun Nair','Vihaan Shah','Rehan Ali','Rohan Gill','Neel Kapoor','Yash Bedi','Samir Khan'];
+const roles=['Batter','Batter','All-rounder','Bowler','Wicketkeeper','Batter','Bowler','All-rounder','Bowler','Batter','Bowler'];
+const initials=n=>n.split(' ').map(x=>x[0]).join('');
+let squad=names.map((name,i)=>({id:i+1,name,role:roles[i],bat:[82,78,70,46,65,74,42,68,38,72,35][i],bowl:[25,32,61,83,30,36,80,65,86,29,78][i],field:[70,75,68,66,80,73,71,77,62,69,70][i],cost:0}));
+let coins=1200,training=3,clubName='Wicket Wanderers',round=0,played=0,wins=0,losses=0,ties=0,points=0,results=[],market=[],match=null,batStyle='balanced',shotStyle='ground',bowlStyle='line',lastToast;
+const opponents=[{name:'River City XI',rating:69},{name:'Northside Strikers',rating:72},{name:'Harbour Hawks',rating:65},{name:'Metro Mavericks',rating:75},{name:'Hilltop Rangers',rating:70},{name:'Coastal Comets',rating:77}];
+function notify(msg){const t=$('toast');t.textContent=msg;t.classList.add('show');clearTimeout(lastToast);lastToast=setTimeout(()=>t.classList.remove('show'),2200)}
+function avg(key){return Math.round(squad.reduce((a,p)=>a+p[key],0)/Math.max(1,squad.length))}
+function rating(p){return Math.round((p.bat*.42+p.bowl*.38+p.field*.2))}
+function teamRating(){return Math.round((avg('bat')+avg('bowl')+avg('field'))/3)}
+function ordinal(n){return n+(n===1?'st':n===2?'nd':n===3?'rd':'th')}
+function go(view){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id==='view-'+view));document.querySelectorAll('.nav [data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));if(view==='match')renderMatch();window.scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('[data-view]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.view)));
+document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>go(b.dataset.go)));
+function makeMarket(){const pool=[['Milan Sethi','Batter',88,20,74,520],['Zaid Mirza','Bowler',38,91,70,560],['Pranav Iyer','All-rounder',76,75,78,680],['Tara Sen','Bowler',48,86,84,610],['Kian Dutta','Batter',85,28,79,590],['Omar Qureshi','All-rounder',72,72,70,650],['Ritvik Bose','Wicketkeeper',73,35,88,570],['Aadi Menon','Batter',81,30,72,500],['Farhan Sheikh','Bowler',42,89,75,580]];market=pool.sort(()=>Math.random()-.5).slice(0,3).map((p,i)=>({id:100+round*10+i,name:p[0],role:p[1],bat:p[2],bowl:p[3],field:p[4],cost:p[5]}))}
+function renderPlayer(p,train=false){return '<div class="player"><div class="avatar">'+initials(p.name)+'</div><div><h3>'+p.name+'</h3><small>'+p.role+' · BAT '+p.bat+' · BOWL '+p.bowl+' · FIELD '+p.field+'</small><div class="bar"><i style="width:'+rating(p)+'%"></i></div></div><div style="text-align:right"><div class="rating">'+rating(p)+'</div>'+(train?'<button data-train="'+p.id+'" style="padding:6px 9px;font-size:10px;margin-top:4px">Train</button>':'<small class="muted">OVR</small>')+'</div></div>'}
+function render(){ $('coins').textContent=coins.toLocaleString();$('training').textContent=training;$('rank').textContent='#'+(Math.max(1,4-wins+losses));$('clubBadge').textContent=clubName.toUpperCase();$('homeClubName').textContent=clubName;$('homeRank').textContent=ordinal(Math.max(1,4-wins+losses));$('played').textContent=played;$('wins').textContent=wins;$('teamRating').textContent=teamRating();$('roundNo').textContent=Math.min(round+1,6);$('nextOpponent').textContent=opponents[Math.min(round,5)].name;$('fixtureHint').textContent=round>=6?'Season complete. Start the next season from the League tab.':'Two-over league fixture · Set your tactics and take the field.';$('squadCount').textContent=squad.length+' / 15 PLAYERS';$('batAvg').textContent=avg('bat');$('bowlAvg').textContent=avg('bowl');$('clubNameInput').value=clubName;
+ $('featured').innerHTML=[...squad].sort((a,b)=>rating(b)-rating(a)).slice(0,3).map(p=>'<div class="card">'+renderPlayer(p,false)+'</div>').join('');
+ $('squadList').innerHTML=squad.map(p=>renderPlayer(p,true)).join('');
+ $('leaguePlayed').textContent=played;$('leaguePoints').textContent=points;$('leagueWins').textContent=wins;$('leagueLosses').textContent=losses;
+ $('leagueStatus').textContent=round>=6?'SEASON COMPLETE':'IN PROGRESS';$('newSeason').disabled=round<6;
+ renderLeague();renderMarket();renderResults();
 }
-function reset(){
- cancelAnimationFrame(raf);runs=0;wickets=0;balls=0;last='—';direction=0;delivery=null;shot=null;fielders=makeFielders();overLog=[];history=[];state='ready';batSwing=0;
- $('status').textContent='INNINGS READY. PRESS START / NEXT BALL.';
- document.querySelectorAll('[data-dir]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.dir)===0));
- update();draw();
-}
-function update(){
- const ov=Math.floor(balls/6),b=balls%6;
- $('score').textContent=runs+'/'+wickets;$('overs').textContent=ov+'.'+b;
- $('rate').textContent=balls?(runs/(balls/6)).toFixed(2):'0.00';
- $('last').textContent=last;$('target').textContent='—';
- $('overlog').innerHTML=overLog.length?overLog.slice(-6).map(v=>'<span>'+v+'</span>').join(''):'Waiting for first delivery.';
- $('start').textContent=state==='menu'?'START INNINGS':state==='over'?'INNINGS OVER':'NEXT BALL';
- $('pause').textContent=state==='paused'?'RESUME':'PAUSE';
-}
-function draw(){
- ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';
- // Dotted oval playing field and inner ring.
- for(let a=0;a<TAU;a+=.055){pixel(CX+157*Math.cos(a),CY+224*Math.sin(a),3)}
- for(let a=0;a<TAU;a+=.11){pixel(CX+112*Math.cos(a),CY+160*Math.sin(a),3)}
- // Inner 30-yard circle is deliberately dotted.
- ctx.setLineDash([2,7]);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(CX,CY,112,160,0,0,TAU);ctx.stroke();ctx.setLineDash([]);
- // Pitch, return creases and wicket marks.
- ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(132,135,96,250);
- for(let x=120;x<=240;x+=6){pixel(x,157,3);pixel(x,365,3)}
- for(let y=145;y<378;y+=12)pixel(180,y,3);
- for(const x of [171,180,189]){ctx.fillRect(x,151,3,12);ctx.fillRect(x,367,3,12)}
- // Fielders: tiny abstract pixel markers, never human sprites.
- for(const f of fielders){ctx.fillRect(Math.round(f.x)-3,Math.round(f.y)-3,7,7);ctx.fillRect(Math.round(f.x)-1,Math.round(f.y)-6,3,3)}
- // Bowler's end and batting crease.
- ctx.fillRect(174,145,12,3);ctx.fillRect(174,379,12,3);
- // Direction marker and bat.
- txt('SHOT: '+['OFF SIDE','STRAIGHT','LEG SIDE'][direction+1],CX,24,9);
- const batX=CX+direction*23,batY=402;
- ctx.save();ctx.translate(batX,batY);ctx.rotate(batSwing?-.8*batSwing:0);ctx.fillRect(-3,-24,6,39);ctx.fillRect(-6,-29,12,7);ctx.restore();
- // Delivery ball and seam pixels.
- if(delivery){ctx.fillRect(delivery.x-4,delivery.y-4,8,8);ctx.fillRect(delivery.x-1,delivery.y-5,2,2)}
- // Shot trail and ball.
- if(shot){
-   ctx.fillStyle='#fff';for(let i=0;i<shot.path.length;i+=2)pixel(shot.path[i].x,shot.path[i].y,3);
-   ctx.fillRect(shot.x-4,shot.y-4,8,8);
-   if(shot.finished){for(let a=0;a<TAU;a+=Math.PI/2)pixel(shot.x+Math.cos(a)*10,shot.y+Math.sin(a)*10,3)}
- }
- // Small monochrome scoreboard inside the game display.
- ctx.font='9px monospace';txt('POCKET CRICKET',CX,492,9);
- if(state==='menu'||state==='over'){
-   ctx.fillStyle='#000';ctx.fillRect(55,215,250,90);ctx.strokeStyle='#fff';ctx.strokeRect(55,215,250,90);ctx.fillStyle='#fff';
-   txt(state==='over'?'INNINGS COMPLETE':'READY TO PLAY',CX,245,14);
-   txt(state==='over'?'FINAL  '+runs+'/'+wickets:'PRESS START INNINGS',CX,268,11);
-   txt(state==='over'?'NEW INNINGS TO RESTART':'AIM · TIME · SCORE',CX,287,9);
- }
- if(state==='paused'){ctx.fillStyle='#000';ctx.fillRect(115,235,130,45);ctx.strokeStyle='#fff';ctx.strokeRect(115,235,130,45);ctx.fillStyle='#fff';txt('PAUSED',CX,263,14)}
-}
-function finishBall(result,runCount=0){
- if(state==='over')return;
- balls++;runs+=runCount;last=result;overLog.push(result);history.push({ball:balls,result,runs:runCount});
- delivery=null;if(shot)shot.finished=true;state='ready';update();
- if(wickets>=5||(maxOvers>0&&balls>=maxOvers*6)){
-   state='over';$('status').textContent='INNINGS COMPLETE — '+runs+'/'+wickets+' IN '+Math.floor(balls/6)+'.'+balls%6+' OVERS.';beep(760,.15);
- }else{$('status').textContent=result==='W'?'WICKET! PRESS NEXT BALL.':result==='0'?'DOT BALL. PRESS NEXT BALL.':result+' RUN'+(runCount===1?'':'S')+'! PRESS NEXT BALL.'}
- update();draw();
-}
-function startBall(){
- if(state==='over'){ $('status').textContent='INNINGS OVER. START A NEW INNINGS.';return}
- if(state==='delivery'||state==='flight'){ $('status').textContent='BALL IS LIVE — PLAY YOUR SHOT.';return}
- if(state==='paused')return;
- state='delivery';shot=null;fielders=makeFielders();batSwing=0;
- const type=['PACE','SWING','SPIN','CUTTER'][Math.floor(rand(0,4))];
- const d=speed[difficulty],vx=rand(-.38,.38)*d;
- delivery={x:CX+rand(-25,25),y:170,vx,vy:rand(2.3,3.1)*d,type,swung:false};
- $('status').textContent=type+' DELIVERY — WATCH THE BALL!';beep(360,.04);lastFrame=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(loop);update();draw();
-}
-function miss(wicket=true){
- if(state!=='delivery')return;
- if(wicket)wickets++;
- finishBall(wicket?'W':'0',0);beep(wicket?150:260,.1);
-}
-function swing(){
- if(state!=='delivery'||!delivery||delivery.swung)return;
- delivery.swung=true;batSwing=1;
- const sweet=370;
- const window=difficulty==='easy'?60:difficulty==='hard'?37:48;
- const quality=clamp(1-Math.abs(delivery.y-sweet)/window,0,1);
- cancelAnimationFrame(raf);
- if(quality<.12){wickets++;finishBall('W',0);$('status').textContent='BEATEN! THE WICKET IS HIT.';beep(150,.13);return}
- const side=direction;
- const baseAngle=side===0?0:side*0.78;
- const angle=baseAngle+rand(-.17,.17);
- const power=clamp(quality*rand(.88,1.08),.08,1);
- const distance=62+power*145;
- const ex=clamp(CX+Math.sin(angle)*distance+rand(-15,15),15,345);
- const ey=clamp(CY-Math.cos(angle)*distance+rand(-25,25),35,475);
- const sx=delivery.x,sy=delivery.y;
- const loft=quality>.48;
- shot={x:sx,y:sy,sx,sy,ex,ey,t:0,power,loft,lift:loft?28+power*52:8,path:[],finished:false,fielderTouch:false};
- for(let i=0;i<=48;i++){const t=i/48;shot.path.push({x:sx+(ex-sx)*t,y:sy+(ey-sy)*t-Math.sin(t*Math.PI)*shot.lift})}
- delivery=null;state='flight';$('status').textContent=quality>.82?'PERFECT CONTACT! WATCH THE BALL.':quality>.52?'GOOD SHOT — RUNS ARE ON!':'EDGE! THE FIELDERS ARE MOVING.';
- beep(quality>.82?850:550,.06);lastFrame=0;raf=requestAnimationFrame(loop);draw();
-}
-function loop(now){
- if(state!=='delivery'&&state!=='flight')return;
- const dt=Math.min(2.5,(now-(lastFrame||now))/16.67||1);lastFrame=now;
- if(state==='delivery'){
-   delivery.x+=delivery.vx*dt;delivery.y+=delivery.vy*dt;delivery.vy+=.009*dt;
-   if(delivery.y>=390){miss(true);return}
- }else if(state==='flight'){
-   shot.t=Math.min(1,shot.t+.018*dt);
-   const t=shot.t;
-   shot.x=shot.sx+(shot.ex-shot.sx)*t;
-   shot.y=shot.sy+(shot.ey-shot.sy)*t;
-   // Fielders run towards the ball's ground projection.
-   for(const f of fielders){
-     const dx=shot.x-f.x,dy=shot.y-f.y,dist=Math.hypot(dx,dy);
-     const step=(difficulty==='hard'?2.7:2.2)*dt;
-     if(dist>2){f.x+=dx/dist*Math.min(step,dist);f.y+=dy/dist*Math.min(step,dist)}
-   }
-   const closest=Math.min(...fielders.map(f=>Math.hypot(f.x-shot.x,f.y-shot.y)));
-   // Lofted ball may be caught before it reaches the ground.
-   if(shot.loft&&t>.42&&t<.88&&closest<9){
-     wickets++;shot.finished=true;finishBall('W',0);$('status').textContent='CAUGHT! A FIELDER TAKES THE CATCH.';beep(170,.14);return
-   }
-   if(boundaryPoint(shot.x,shot.y)){
-     const six=shot.loft&&shot.power>.55;
-     shot.finished=true;finishBall(six?'6':'4',six?6:4);beep(six?900:720,.1);return
-   }
-   if(t>=1){
-     shot.finished=true;
-     let score;
-     if(closest<12)score=0;
-     else if(closest<28)score=1;
-     else if(shot.power>.78)score=3;
-     else if(shot.power>.43)score=2;
-     else score=1;
-     shot.finished=true;finishBall(String(score),score);return
-   }
- }
- draw();raf=requestAnimationFrame(loop);
-}
-function pause(){
- if(state==='paused'){state=pausedState;lastFrame=0;$('status').textContent='RESUMED.';if(state==='delivery'||state==='flight')raf=requestAnimationFrame(loop);update();draw();return}
- if(state!=='delivery'&&state!=='flight')return;
- pausedState=state;state='paused';cancelAnimationFrame(raf);$('status').textContent='GAME PAUSED. PRESS RESUME.';update();draw();
-}
-function scorecard(){
- const rows=history.map((v,i)=>(i+1)+'. '+v.result+(v.runs?' ('+v.runs+' runs)':'')).join('  ·  ');
- $('status').textContent='SCORECARD '+runs+'/'+wickets+' | '+Math.floor(balls/6)+'.'+balls%6+' OVERS | '+(rows||'NO BALLS PLAYED');
-}
-document.querySelectorAll('[data-dir]').forEach(b=>b.addEventListener('click',()=>{direction=Number(b.dataset.dir);document.querySelectorAll('[data-dir]').forEach(x=>x.classList.toggle('selected',x===b));draw()}));
-$('start').addEventListener('click',startBall);$('new').addEventListener('click',reset);$('swing').addEventListener('click',swing);$('pause').addEventListener('click',pause);$('scorecard').addEventListener('click',scorecard);
-$('length').addEventListener('change',()=>{maxOvers=Number($('length').value);reset()});
-$('difficulty').addEventListener('change',()=>{difficulty=$('difficulty').value;$('status').textContent='DIFFICULTY SET TO '+difficulty.toUpperCase()+'.';});
-$('sound').addEventListener('click',()=>{sound=!sound;$('sound').textContent='SOUND: '+(sound?'ON':'OFF');if(sound)beep(650,.06)});
-canvas.addEventListener('pointerdown',()=>{if(state==='delivery')swing();else if(state==='ready')startBall()});
-document.addEventListener('keydown',e=>{
- const k=e.key.toLowerCase();
- if(['arrowleft','arrowright','arrowup',' ','enter'].includes(k))e.preventDefault();
- if(e.repeat)return;
- if(k==='arrowleft'||k==='a')direction=-1;
- else if(k==='arrowright'||k==='d')direction=1;
- else if(k==='arrowup'||k==='w')direction=0;
- else if(e.code==='Space'){swing();return}
- else if(k==='enter'){startBall();return}
- else if(k==='p'){pause();return}
- else return;
- document.querySelectorAll('[data-dir]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.dir)===direction));draw();
-});
-maxOvers=Number($('length').value);difficulty=$('difficulty').value;reset();
+function renderLeague(){const clubs=[{name:clubName,p:played,w:wins,pts:points,you:true},...opponents.map((o,i)=>({name:o.name,p:Math.min(6,Math.max(0,round+(i<round?1:0))),w:Math.max(0,Math.min(5,3+((i*7+2)%3)-1)),pts:Math.max(0,Math.min(18,9+((i*5+round)%7)-2))}))].sort((a,b)=>b.pts-a.pts||b.w-a.w);$('leagueTable').innerHTML=clubs.map((c,i)=>'<div class="league-row '+(c.you?'you':'')+'"><b>'+ (i+1)+'</b><span>'+c.name+(c.you?' ★':'')+'</span><span>'+c.p+'</span><span>'+c.w+'</span><b>'+c.pts+'</b></div>').join('')}
+function renderMarket(){$('marketList').innerHTML=market.map(p=>'<div class="card market-card"><div class="eyebrow">SCOUT REPORT</div>'+renderPlayer(p,false)+'<div class="scoreline"><span>Signing fee</span><b>🪙 '+p.cost+'</b></div><button class="primary" data-sign="'+p.id+'" '+(coins<p.cost||squad.length>=15?'disabled':'')+'>Sign player</button></div>').join('')}
+function renderResults(){$('resultsList').innerHTML=results.length?results.slice().reverse().map(r=>'<div class="feed-item"><span>Round '+r.round+' · '+r.opponent+'</span><b class="'+(r.outcome==='WIN'?'tag-good':r.outcome==='LOSS'?'danger':'tag-warn')+'">'+r.outcome+' · '+r.score+'</b></div>').join(''):'<div class="empty">No results yet. Your first fixture awaits.</div>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-train]');if(b){trainPlayer(Number(b.dataset.train));return}const s=e.target.closest('[data-sign]');if(s){signPlayer(Number(s.dataset.sign));return}});
+function trainPlayer(id){const p=squad.find(x=>x.id===id);if(!p)return;if(training<=0){notify('No training sessions left this season.');return}const key=p.role==='Bowler'?'bowl':p.role==='Batter'||p.role==='Wicketkeeper'?'bat':(p.bat<=p.bowl?'bat':'bowl');p[key]=Math.min(99,p[key]+2);training--;render();notify(p.name+' improved '+key.toUpperCase()+' by 2!')}
+function signPlayer(id){const p=market.find(x=>x.id===id);if(!p||coins<p.cost||squad.length>=15)return;coins-=p.cost;squad.push({...p});market=market.filter(x=>x.id!==id);render();notify(p.name+' signed for your club!')}
+$('saveName').addEventListener('click',()=>{const v=$('clubNameInput').value.trim();if(!v){notify('Enter a club name first.');return}clubName=v.slice(0,24);render();notify('Club identity updated.')});
+function tacticSetup(){document.querySelectorAll('[data-bat]').forEach(b=>b.classList.toggle('selected',b.dataset.bat===batStyle));document.querySelectorAll('[data-shot]').forEach(b=>b.classList.toggle('selected',b.dataset.shot===shotStyle));document.querySelectorAll('[data-bowl]').forEach(b=>b.classList.toggle('selected',b.dataset.bowl===bowlStyle))}
+document.querySelectorAll('[data-bat]').forEach(b=>b.addEventListener('click',()=>{batStyle=b.dataset.bat;tacticSetup()}));
+document.querySelectorAll('[data-shot]').forEach(b=>b.addEventListener('click',()=>{shotStyle=b.dataset.shot;tacticSetup()}));
+document.querySelectorAll('[data-bowl]').forEach(b=>b.addEventListener('click',()=>{bowlStyle=b.dataset.bowl;tacticSetup()}));
+function startMatch(){if(round>=6){notify('Season complete. Start the next season!');return}const opponent=opponents[round];match={opponent,innings:1,balls:0,runs:0,wickets:0,history:[],target:null,oppRuns:0,oppWickets:0,oppBalls:0,done:false};$('playBall').disabled=true;$('nextDelivery').disabled=false;$('nextDelivery').textContent='Play delivery';$('commentary').textContent='The captain wins the toss and elects to bat. Your openers are ready. Pick your approach, then play the first delivery.';$('matchTitle').textContent=clubName+' vs '+opponent.name;$('matchSubtitle').textContent='Two overs per innings · Six wickets available';renderMatch()}
+function finishUserInnings(){match.target=match.runs+1;match.innings=2;const userStrength=teamRating(),opp=match.opponent.rating;let r=0,w=0;for(let i=0;i<12;i++){const tactic=bowlStyle==='pace'?1.08:bowlStyle==='spin'?1.04:1.16;const chance=clamp(.24+(userStrength-opp)/210+(tactic-1)*.18,.1,.45);if(Math.random()<chance)w++;else r+=[0,1,1,2,2,3,4,6][Math.floor(Math.random()*8)]}match.oppRuns=r;match.oppWickets=w;match.oppBalls=12;$('commentary').innerHTML='<b>Innings break!</b> '+clubName+' finish on '+match.runs+'/'+match.wickets+'. '+match.opponent.name+' need '+match.target+' to win. Your bowling plan: '+bowlStyle+'.';$('nextDelivery').textContent='View result';renderMatch()}
+function playDelivery(){if(!match||match.done)return;if(match.innings===1){if(match.balls>=12){finishUserInnings();return}const p=squad.filter(x=>x.role!=='Bowler').sort((a,b)=>b.bat-a.bat)[match.balls%Math.max(1,squad.filter(x=>x.role!=='Bowler').length)]||squad[0];const opp=match.opponent.rating;let risk=batStyle==='attack'?.34:batStyle==='careful'?.13:.22;if(shotStyle==='loft')risk+=.13;if(shotStyle==='placement')risk-=.04;const skill=p.bat/100;const wicketChance=clamp(risk+(opp-65)/250+(60-p.bat)/260,.04,.58);let outcome,runs=0;if(Math.random()<wicketChance){outcome='W';match.wickets++}else{const base= Math.random();let chance4=shotStyle==='loft'?.24:shotStyle==='placement'?.13:.17;let chance6=shotStyle==='loft'?.15:.04;chance4+=(skill-.65)*.16;chance6+=(skill-.65)*.12;if(base<chance6){runs=6;outcome='6'}else if(base<chance6+chance4){runs=4;outcome='4'}else if(base<chance6+chance4+.16){runs=2;outcome='2'}else if(base<chance6+chance4+.5){runs=1;outcome='1'}else outcome='·';match.runs+=runs}match.balls++;match.history.push(outcome);const lines={W:'OUT! The bowler finds the breakthrough.',6:'SIX! Launched over the rope. Huge hit!',4:'FOUR! Beautiful placement into the gap.',2:'Two runs. Sharp running between the wickets.',1:'Quick single taken.', '·':'Dot ball. Good delivery from the bowler.'};$('commentary').innerHTML='<b>'+outcome+'</b> — '+lines[outcome]+' <span class="muted">'+p.name+' · '+batStyle+' · '+shotStyle+'</span>';if(match.balls>=12||match.wickets>=5){finishUserInnings()}else renderMatch()}else{resolveMatch()}}
+function resolveMatch(){if(!match||match.done)return;match.done=true;const won=match.runs>match.oppRuns,tied=match.runs===match.oppRuns;const outcome=won?'WIN':tied?'TIE':'LOSS';if(won){wins++;points+=3;coins+=220}else if(tied){ties++;points++;coins+=100}else{losses++;coins+=70}played++;round++;results.push({round,opponent:match.opponent.name,outcome,score:match.runs+'/'+match.wickets+' — '+match.oppRuns+'/'+match.oppWickets});$('commentary').innerHTML='<b>'+outcome+'!</b> '+clubName+' '+match.runs+'/'+match.wickets+' · '+match.opponent.name+' '+match.oppRuns+'/'+match.oppWickets+'. '+(won?'The dressing room celebrates. Match bonus: 220 coins.':tied?'A share of the points. Match bonus: 100 coins.':'A tough result. Match participation bonus: 70 coins.');$('nextDelivery').disabled=true;$('nextDelivery').textContent='Match complete';$('playBall').disabled=false;$('playBall').textContent='Start next match';$('playBall').onclick=()=>{go('home');render()};renderMatch();render();notify(outcome+' · '+(won?'+220':tied?'+100':'+70')+' coins')}
+function renderMatch(){if(!match){$('matchTitle').textContent='Ready for the toss?';$('matchSubtitle').textContent=round>=6?'Season complete. Claim your next season from the League tab.':'Your next opponent is '+opponents[Math.min(round,5)].name+'.';$('matchRound').textContent='ROUND '+Math.min(round+1,6);$('matchScore').textContent='0/0';$('matchOvers').textContent='0.0';$('battingLabel').textContent=clubName.toUpperCase();$('inningsLabel').textContent='FIRST INNINGS · 2 OVERS';$('targetLabel').textContent='TARGET —';$('ballHistory').innerHTML='<span class="pill">No balls bowled yet</span>';return}
+ $('matchRound').textContent='ROUND '+(round+1);$('matchScore').textContent=(match.innings===1?match.runs+'/'+match.wickets:match.oppRuns+'/'+match.oppWickets);$('matchOvers').textContent=match.innings===1?(Math.floor(match.balls/6)+'.'+match.balls%6):'2.0';$('battingLabel').textContent=(match.innings===1?clubName:match.opponent.name).toUpperCase();$('inningsLabel').textContent=match.innings===1?'FIRST INNINGS · 2 OVERS':'CHASE · 2 OVERS';$('targetLabel').textContent=match.target?'TARGET '+match.target:'TARGET —';$('ballHistory').innerHTML=(match.history.length?match.history.slice(-12).map(v=>'<span class="pill">'+v+'</span>').join(''):'<span class="pill">Waiting for first ball</span>');$('ballDot').style.left=(42+Math.random()*16)+'%';$('ballDot').style.top=(18+Math.random()*45)+'%';}
+$('playBall').addEventListener('click',()=>{if(!match||match.done)startMatch();else playDelivery()});
+$('nextDelivery').addEventListener('click',()=>{if(!match)return;if(match.innings===1)playDelivery();else resolveMatch()});
+$('forfeitMatch').addEventListener('click',()=>{go('home');notify('Back in the clubhouse.')});
+$('newSeason').addEventListener('click',()=>{if(round<6)return;round=0;played=0;wins=0;losses=0;ties=0;points=0;results=[];training=3;match=null;makeMarket();render();notify('A new season begins. Training sessions refreshed!')});
+makeMarket();render();tacticSetup();renderMatch();
 })();
 </script>
 </body>
