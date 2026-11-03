@@ -4,150 +4,238 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#000000">
-<meta name="description" content="A monochrome, top-down retro pocket cricket game.">
-<title>Pocket Cricket — Monochrome</title>
+<meta name="description" content="Pocket Cricket: a complete monochrome, top-down retro cricket game.">
+<title>Pocket Cricket — Nokia LCD Edition</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='black'/%3E%3Cpath d='M8 8h16v16H8z' fill='white'/%3E%3C/svg%3E">
 <style>
-:root{color-scheme:dark;--black:#000;--white:#fff}
+:root{color-scheme:dark;--b:#000;--w:#fff}
 *{box-sizing:border-box}
-html,body{margin:0;min-height:100%;background:var(--black);color:var(--white);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
-body{display:flex;justify-content:center;padding:16px 12px calc(18px + env(safe-area-inset-bottom))}
-button{font:inherit;color:var(--white);background:var(--black);border:2px solid var(--white);border-radius:0;padding:12px 14px;min-height:46px;touch-action:manipulation}
-button:active,button:focus-visible{background:var(--white);color:var(--black);outline:none}
-button:focus-visible{outline:2px dotted var(--white);outline-offset:4px}
-.app{width:min(100%,620px);display:flex;flex-direction:column;gap:12px}
-header{text-align:center;border-bottom:1px dotted var(--white);padding:4px 0 12px}
-h1{font-size:clamp(21px,5vw,30px);letter-spacing:3px;margin:0 0 5px}
-.sub{font-size:11px;letter-spacing:2px}
-.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--white)}
-.stat{text-align:center;padding:8px 3px;border-right:1px dotted var(--white)}
+html,body{margin:0;min-height:100%;background:var(--b);color:var(--w);font-family:ui-monospace,SFMono-Regular,Consolas,monospace}
+body{display:flex;justify-content:center;padding:12px 10px calc(18px + env(safe-area-inset-bottom))}
+button,select{font:inherit;color:var(--w);background:var(--b);border:2px solid var(--w);border-radius:0;min-height:44px;padding:9px 10px}
+button{touch-action:manipulation;cursor:pointer}
+button:active,button:focus-visible,select:focus-visible{background:var(--w);color:var(--b);outline:2px dotted var(--w);outline-offset:3px}
+button:disabled{opacity:.45}
+.app{width:min(100%,650px);display:flex;flex-direction:column;gap:10px}
+header{text-align:center;border-bottom:1px dotted var(--w);padding:3px 0 10px}
+h1{font-size:clamp(22px,5vw,30px);letter-spacing:3px;margin:0 0 5px}
+.sub{font-size:10px;letter-spacing:2px}
+.panel{border:1px solid var(--w);padding:9px}
+.settings{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.setting{display:flex;flex-direction:column;gap:5px;font-size:10px;letter-spacing:1px}
+.setting select{width:100%;font-size:12px}
+.scoreboard{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--w)}
+.stat{text-align:center;padding:7px 2px;border-right:1px dotted var(--w);min-width:0}
 .stat:last-child{border:0}
-.stat span{display:block;font-size:10px;letter-spacing:1px}
-.stat strong{display:block;font-size:19px;margin-top:4px}
-.screen{border:2px solid var(--white);padding:7px;background:var(--black)}
+.stat span{display:block;font-size:9px;letter-spacing:1px}
+.stat strong{display:block;font-size:clamp(16px,4vw,20px);margin-top:4px;overflow:hidden}
+.screen{border:2px solid var(--w);padding:5px}
 canvas{display:block;width:100%;height:auto;aspect-ratio:3/4;image-rendering:pixelated;background:#000;touch-action:manipulation}
-.status{min-height:38px;text-align:center;border:1px dotted var(--white);padding:10px 6px;font-size:12px;line-height:1.4}
-.controls{display:grid;grid-template-columns:1fr 1fr 1.25fr;gap:8px}
-.controls button{font-size:12px}
-.controls .hit{font-weight:900;letter-spacing:1px}
-.aim{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.aim button{min-height:42px;padding:8px}
-.help{font-size:11px;line-height:1.7;border-top:1px dotted var(--white);padding-top:10px}
-.help b{font-weight:900}
-.footer{text-align:center;font-size:10px;letter-spacing:1px;opacity:1}
-@media(min-width:520px){body{padding-top:24px}.screen{padding:10px}.help{font-size:12px}}
+.status{min-height:42px;text-align:center;border:1px dotted var(--w);padding:10px 7px;font-size:11px;line-height:1.5}
+.aim,.controls,.extras{display:grid;gap:7px}
+.aim{grid-template-columns:repeat(3,1fr)}
+.controls{grid-template-columns:1fr 1fr 1.2fr}
+.extras{grid-template-columns:repeat(3,1fr)}
+.aim button,.controls button,.extras button{font-size:11px;padding:8px 4px}
+.hit{font-weight:900;letter-spacing:1px}
+button.selected{background:var(--w);color:var(--b)}
+.info{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.info h2{font-size:11px;letter-spacing:1px;margin:0 0 7px}
+.info p{font-size:10px;line-height:1.5;margin:3px 0}
+.log{font-size:10px;line-height:1.8;min-height:50px;overflow-wrap:anywhere}
+.log span{display:inline-block;border:1px solid var(--w);padding:1px 4px;margin:2px}
+.help{font-size:10px;line-height:1.7;border-top:1px dotted var(--w);padding-top:9px}
+.footer{text-align:center;font-size:9px;letter-spacing:1px}
+@media(min-width:520px){body{padding-top:20px}.screen{padding:8px}.help{font-size:11px}}
+@media(max-width:360px){.stat span{font-size:8px}.settings{gap:6px}.panel{padding:7px}}
 </style>
 </head>
 <body>
 <main class="app">
-<header><h1>POCKET CRICKET</h1><div class="sub">MONOCHROME EDITION · 1-BIT PIXEL GAME</div></header>
-<section class="scoreboard" aria-label="Match score">
-<div class="stat"><span>RUNS</span><strong id="runs">0</strong></div>
-<div class="stat"><span>WICKETS</span><strong id="wickets">0</strong></div>
-<div class="stat"><span>BALLS</span><strong id="balls">0/18</strong></div>
-<div class="stat"><span>LAST</span><strong id="last">—</strong></div>
+<header><h1>POCKET CRICKET</h1><div class="sub">NOKIA LCD EDITION · PURE 1-BIT PIXELS</div></header>
+<section class="settings panel" aria-label="Match settings">
+<label class="setting">MATCH MODE<select id="mode"><option value="quick">QUICK MATCH · 12 BALLS</option><option value="super">SUPER OVER · 6 BALLS</option><option value="chase">TARGET CHASE · 12 BALLS</option><option value="practice">PRACTICE · NO LIMIT</option></select></label>
+<label class="setting">DIFFICULTY<select id="difficulty"><option value="easy">EASY</option><option value="normal" selected>NORMAL</option><option value="hard">HARD</option></select></label>
 </section>
-<div class="screen"><canvas id="field" width="240" height="320" aria-label="Top-down pixel cricket field. Tap the field or press space to swing the bat."></canvas></div>
-<div class="status" id="status" aria-live="polite">READY. Choose a shot direction, then swing when the ball reaches the crease.</div>
-<div class="aim" aria-label="Shot direction">
-<button data-aim="-1">◀ LEFT</button><button data-aim="0">▲ STRAIGHT</button><button data-aim="1">RIGHT ▶</button>
-</div>
-<div class="controls">
-<button id="start">START / NEXT</button><button id="reset">NEW MATCH</button><button class="hit" id="hit">SWING ●</button>
-</div>
-<div class="help"><b>HOW TO PLAY</b><br>Wait for the ball to approach the bottom crease, then press <b>SPACE</b> or <b>SWING</b>. Choose LEFT, STRAIGHT, or RIGHT to direct your shot. A well-timed hit sends the ball across the field; its dotted path and landing point are shown. Miss the timing and you may lose a wicket.<br><b>KEYS:</b> ← / A = left · ↑ / W = straight · → / D = right · SPACE = swing · ENTER = start / next ball</div>
-<div class="footer">NO COLOURS. NO CHARACTERS. JUST CRICKET IN PIXELS.</div>
+<section class="scoreboard" aria-label="Match score">
+<div class="stat"><span>RUNS</span><strong id="runs">0</strong></div><div class="stat"><span>WICKETS</span><strong id="wickets">0</strong></div><div class="stat"><span>OVERS</span><strong id="overs">0.0</strong></div><div class="stat"><span>LAST BALL</span><strong id="last">—</strong></div>
+</section>
+<section class="screen"><canvas id="field" width="240" height="320" aria-label="Top-down monochrome cricket field. Tap SWING when the ball reaches the batting crease."></canvas></section>
+<div class="status" id="status" role="status" aria-live="polite">SELECT A MODE. PRESS START, THEN TIME YOUR SWING.</div>
+<div class="aim" aria-label="Shot direction"><button data-aim="-1">◀ LEFT</button><button data-aim="0" class="selected">▲ STRAIGHT</button><button data-aim="1">RIGHT ▶</button></div>
+<div class="controls"><button id="start">START / NEXT</button><button id="pause">PAUSE</button><button id="hit" class="hit">SWING ●</button></div>
+<div class="extras"><button id="sound">SOUND: OFF</button><button id="scorecard">SCORECARD</button><button id="reset">NEW MATCH</button></div>
+<section class="info">
+<div class="panel"><h2>MATCH DETAILS</h2><p id="details">Quick match · 12 legal balls</p><p id="target">Target: —</p><p id="rate">Run rate: 0.00</p></div>
+<div class="panel"><h2>RECENT BALLS</h2><div class="log" id="log">No deliveries yet.</div></div>
+</section>
+<div class="help"><b>HOW TO PLAY</b><br>1. Press START / NEXT to bowl. 2. Choose LEFT, STRAIGHT or RIGHT. 3. Press SWING as the ball reaches the lower crease. Better timing means stronger shots. Fielders can stop ground shots or catch aerial shots; shots reaching the rope score four, and clearing it score six.<br><b>KEYBOARD:</b> ← / A = left · ↑ / W = straight · → / D = right · SPACE = swing · ENTER = start/next · P = pause.<br><b>TOUCH:</b> Use the on-screen buttons. You can also tap the field to swing during a delivery.</div>
+<div class="footer">NO COLOURS · NO HUMANS · NO 3D · JUST CRICKET</div>
 </main>
 <script>
 (()=>{
 'use strict';
-const canvas=document.getElementById('field'),ctx=canvas.getContext('2d');
-const $=id=>document.getElementById(id);
-const W=240,H=320;
-let runs=0,wickets=0,balls=0,aim=0,phase='ready',ball=null,trail=[],landing=null,last='—',message='READY. Choose a shot direction, then swing when the ball reaches the crease.',raf=0,overMessage='';
-const rand=(a,b)=>Math.random()*(b-a)+a;
-function pixel(x,y,size=2){ctx.fillRect(Math.round(x/2)*2,Math.round(y/2)*2,size,size)}
-function text(t,x,y,align='center'){ctx.textAlign=align;ctx.fillText(t,x,y)}
+const $=id=>document.getElementById(id),canvas=$('field'),ctx=canvas.getContext('2d');
+const W=240,H=320,TAU=Math.PI*2;
+const modes={quick:{balls:12,label:'Quick match'},super:{balls:6,label:'Super over'},chase:{balls:12,label:'Target chase'},practice:{balls:Infinity,label:'Practice'}};
+const levels={easy:{speed:.78,window:43,field:1},normal:{speed:1,window:34,field:1.12},hard:{speed:1.22,window:27,field:1.28}};
+let mode='quick',difficulty='normal',runs=0,wickets=0,legal=0,last='—',aim=0,phase='ready',ball=null,shot=null,fielders=[],history=[],target=30,pausedFrom='ready',sound=false,audio=null,raf=0,previous=0,matchEnded=false;
+const rand=(a,b)=>Math.random()*(b-a)+a,clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const limit=()=>modes[mode].balls;
+function pixel(x,y,s=2){ctx.fillRect(Math.round(x/2)*2,Math.round(y/2)*2,s,s)}
+function label(t,x,y,align='center'){ctx.textAlign=align;ctx.fillText(t,x,y)}
+function makeFielders(){return [[40,118],[190,118],[31,188],[209,188],[72,55],[168,55],[120,35]].map(([x,y],i)=>({x,y,homeX:x,homeY:y,active:i<5}))}
+function beep(freq=520,duration=.055){if(!sound)return;try{audio=audio||new(window.AudioContext||window.webkitAudioContext)();const o=audio.createOscillator(),g=audio.createGain();o.type='square';o.frequency.value=freq;g.gain.value=.035;o.connect(g);g.connect(audio.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+duration);o.stop(audio.currentTime+duration)}catch(e){}}
+function setStatus(s){$('status').textContent=s}
+function overText(){if(mode==='practice')return 'PRACTICE';return legal+'/'+limit()+' BALLS'}
+function hud(){
+ $('runs').textContent=runs;$('wickets').textContent=wickets;$('overs').textContent=Math.floor(legal/6)+'.'+legal%6;$('last').textContent=last;
+ $('details').textContent=modes[mode].label+' · '+(mode==='practice'?'unlimited balls':limit()+' legal balls')+' · '+difficulty.toUpperCase();
+ $('target').textContent=mode==='chase'?'Target: '+target+' · Need '+Math.max(0,target-runs):'Target: —';
+ $('rate').textContent='Run rate: '+(legal?((runs/(legal/6||1))).toFixed(2):'0.00');
+ $('log').innerHTML=history.length?history.slice(-12).reverse().map(x=>'<span>'+x+'</span>').join(''):'No deliveries yet.';
+ $('start').textContent=phase==='over'?'MATCH OVER':'START / NEXT';
+ $('pause').textContent=phase==='paused'?'RESUME':'PAUSE';
+}
 function draw(){
  ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.fillStyle='#fff';
- // Dotted oval boundary
- for(let a=0;a<Math.PI*2;a+=.105){pixel(120+104*Math.cos(a),160+146*Math.sin(a),2)}
- // Pitch and dotted markings
- for(let y=48;y<273;y+=7)pixel(119,y,2);
- for(let x=78;x<=162;x+=6){pixel(x,74,2);pixel(x,250,2)}
- ctx.setLineDash([2,5]);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(77,74,86,176);ctx.setLineDash([]);
- // Creases
- for(let x=69;x<=171;x+=5){pixel(x,84,2);pixel(x,240,2)}
- // Wickets: abstract three tiny pixel stumps
- for(let x of [112,120,128]){ctx.fillRect(x,232,2,9);ctx.fillRect(x,82,2,9)}
- // Aim indicator
- ctx.font='7px monospace';text('SHOT: '+(['LEFT','STRAIGHT','RIGHT'][aim+1]),120,18);
- // Previous shot trajectory
- if(trail.length>1){ctx.fillStyle='#fff';for(let i=0;i<trail.length;i+=2){const p=trail[i];pixel(p.x,p.y,2)}}
- if(landing){ctx.fillStyle='#fff';for(let r=0;r<4;r++){for(let a=0;a<Math.PI*2;a+=Math.PI/2)pixel(landing.x+Math.cos(a)*r*2,landing.y+Math.sin(a)*r*2,2)}pixel(landing.x-2,landing.y-2,4);ctx.font='7px monospace';text('LANDING',landing.x,Math.max(30,landing.y-9))}
- // Bat, as a tiny pixel cluster only
- ctx.fillStyle='#fff';
- const bx=120+aim*23,by=263;
- ctx.fillRect(bx-2,by-10,4,20);ctx.fillRect(bx-4,by-13,8,5);ctx.fillRect(bx-1,by+8,2,7);
- // Incoming ball
- if(ball&&phase==='bowled'){pixel(ball.x,ball.y,4);pixel(ball.x-2,ball.y-2,2)}
- // Score / instruction footer on screen
- ctx.font='8px monospace';text('• • •  POCKET LEAGUE  • • •',120,306);
- if(phase==='over'){ctx.font='bold 13px monospace';text('INNINGS COMPLETE',120,151);ctx.font='8px monospace';text('PRESS NEW MATCH',120,166)}
+ // Outer oval boundary, entirely dotted.
+ for(let a=0;a<TAU;a+=.09)pixel(120+105*Math.cos(a),163+147*Math.sin(a),2);
+ // Inner field ring and pitch.
+ for(let a=0;a<TAU;a+=.19)pixel(120+72*Math.cos(a),163+104*Math.sin(a),2);
+ ctx.setLineDash([2,5]);ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(78,71,84,179);ctx.setLineDash([]);
+ for(let x=68;x<=172;x+=5){pixel(x,83,2);pixel(x,239,2)}
+ for(let x=68;x<=172;x+=5){pixel(x,82,2);pixel(x,240,2)}
+ for(let y=88;y<237;y+=8)pixel(119,y,2);
+ // Wickets are abstract pixels, not people.
+ for(const x of [112,120,128]){ctx.fillRect(x,231,2,9);ctx.fillRect(x,80,2,9)}
+ // Fielders are tiny abstract square markers.
+ for(const f of fielders){ctx.fillRect(Math.round(f.x),Math.round(f.y),4,4);ctx.fillRect(Math.round(f.x)+1,Math.round(f.y)-2,2,2)}
+ // Aim and game state.
+ ctx.font='7px monospace';label('SHOT '+['LEFT','STRAIGHT','RIGHT'][aim+1],120,17);
+ label(mode.toUpperCase()+' / '+difficulty.toUpperCase(),120,29);
+ // Batter is represented by a small pixel bat only.
+ const bx=120+aim*18;ctx.fillRect(bx-2,260,4,19);ctx.fillRect(bx-5,257,10,5);ctx.fillRect(bx-1,277,2,5);
+ if(ball&&['bowling','paused'].includes(phase)){pixel(ball.x,ball.y,4);pixel(ball.x-2,ball.y-2,2)}
+ if(shot){
+   ctx.fillStyle='#fff';
+   for(let i=0;i<shot.path.length;i+=2){const p=shot.path[i];pixel(p.x,p.y,2)}
+   pixel(shot.x-1,shot.y-1,4);
+   if(shot.done){for(let r=1;r<=4;r++)for(let a=0;a<TAU;a+=Math.PI/2)pixel(shot.x+Math.cos(a)*r*2,shot.y+Math.sin(a)*r*2,2)}
+ }
+ if(phase==='over'){ctx.fillStyle='#000';ctx.fillRect(34,133,172,55);ctx.strokeStyle='#fff';ctx.strokeRect(34,133,172,55);ctx.fillStyle='#fff';ctx.font='bold 12px monospace';label('INNINGS COMPLETE',120,153);ctx.font='8px monospace';label(runs+' RUNS  '+wickets+' W',120,168);label('NEW MATCH TO RESTART',120,180)}
+ if(phase==='paused'){ctx.fillStyle='#000';ctx.fillRect(65,142,110,34);ctx.strokeStyle='#fff';ctx.strokeRect(65,142,110,34);ctx.fillStyle='#fff';ctx.font='bold 12px monospace';label('PAUSED',120,163)}
+ ctx.font='8px monospace';label('• • • POCKET LEAGUE • • •',120,307);
 }
-function updateHud(){ $('runs').textContent=runs;$('wickets').textContent=wickets;$('balls').textContent=balls+'/18';$('last').textContent=last;$('status').textContent=message; }
-function setMessage(s){message=s;$('status').textContent=s}
-function beginBall(){
- if(phase==='over')return;
- phase='bowled';trail=[];landing=null;ball={x:120+rand(-28,28),y:102,vx:rand(-.16,.16),vy:1.15,age:0,swung:false};setMessage('BALL IN PLAY — WATCH THE CREASE.');cancelAnimationFrame(raf);animate();
+function drawAll(){hud();draw()}
+function checkEnd(){
+ if(mode!=='practice'&&(legal>=limit()||wickets>=5||(mode==='chase'&&runs>=target))){
+   matchEnded=true;phase='over';
+   if(mode==='chase'&&runs>=target)setStatus('TARGET REACHED! YOU WIN. '+runs+' RUNS.');
+   else setStatus('INNINGS COMPLETE. FINAL SCORE: '+runs+'/'+wickets+'.');
+   beep(760,.15);drawAll();return true
+ }
+ return false
 }
-function animate(){
- if(phase!=='bowled')return;
- ball.age++;ball.x+=ball.vx;ball.y+=ball.vy;ball.vy+=.012;
- draw();
- if(ball.y>=230){phase='ready';balls++;wickets++;last='W';setMessage('BOWLED! The ball passed the bat. Press START / NEXT.');updateHud();draw();checkOver();return}
- raf=requestAnimationFrame(animate);
+function resetMatch(){
+ cancelAnimationFrame(raf);runs=0;wickets=0;legal=0;last='—';aim=0;phase='ready';ball=null;shot=null;history=[];fielders=makeFielders();matchEnded=false;pausedFrom='ready';
+ if(mode==='chase')target=30+Math.floor(rand(0,21));
+ setStatus(mode==='chase'?'CHASE MODE. TARGET '+target+'. PRESS START.':'NEW '+modes[mode].label.toUpperCase()+'. PRESS START.');
+ drawAll();document.querySelectorAll('[data-aim]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.aim)===aim));
+}
+function bowl(){
+ if(phase==='over'){setStatus('MATCH OVER. PRESS NEW MATCH.');return}
+ if(phase==='bowling'){setStatus('DELIVERY IN PLAY — TIME YOUR SWING.');return}
+ if(phase==='paused')return;
+ shot=null;fielders=makeFielders();
+ const d=levels[difficulty],kind=['PACE','SWING','SLOW','LENGTH'][Math.floor(rand(0,4))];
+ const startX=120+rand(-34,34),speed=rand(1.25,1.65)*d.speed;
+ ball={x:startX,y:91,vx:rand(-.28,.28),vy:speed,age:0,kind,swung:false};
+ phase='bowling';setStatus(kind+' DELIVERY — WATCH THE BALL!');beep(390,.04);previous=0;cancelAnimationFrame(raf);raf=requestAnimationFrame(tick);
+}
+function tick(now){
+ if(phase!=='bowling'&&phase!=='flight')return;
+ const dt=Math.min(2,(now- (previous||now))/16.67||1);previous=now;
+ if(phase==='bowling'){
+   ball.age+=dt;ball.x+=ball.vx*dt;ball.y+=ball.vy*dt;ball.vy+=.008*dt;
+   if(ball.y>=236){legal++;wickets++;last='W';history.push('W');phase='ready';ball=null;setStatus('BOWLED! THE BALL PASSED THE BAT.');beep(170,.13);drawAll();if(!checkEnd()){}return}
+ }else if(phase==='flight'){
+   shot.t=Math.min(1,shot.t+.025*dt);
+   const t=shot.t;shot.x=shot.sx+(shot.ex-shot.sx)*t;shot.y=shot.sy+(shot.ey-shot.sy)*t-Math.sin(t*Math.PI)*shot.lift;
+   if(!shot.done){
+     // Fielders close in on the ball. Aerial shots can be caught; ground shots can be stopped.
+     for(const f of fielders){const dx=shot.x-f.x,dy=shot.y-f.y,dist=Math.hypot(dx,dy);if(dist>2){f.x+=dx/dist*Math.min(2.2*dt,dist);f.y+=dy/dist*Math.min(2.2*dt,dist)}}
+     const near=fielders.some(f=>Math.hypot(shot.x-f.x,shot.y-f.y)<5);
+     if(near&&t>.28&&t<.9&&shot.air>0.55){shot.done=true;shot.result='W';wickets++;last='W';history.push('W');phase='ready';shot.label='CAUGHT';setStatus('CAUGHT IN THE FIELD! WICKET.');beep(180,.14);drawAll();checkEnd();return}
+     if(near&&t>.5&&shot.air<.55){shot.stopped=true}
+   }
+   if(t>=1){
+     shot.done=true;
+     const radius=Math.hypot((shot.x-120)/105,(shot.y-163)/147);
+     let score;
+     if(radius>=.94){score=shot.power>0.78?6:4}
+     else if(shot.stopped)score=1;
+     else score=shot.power>.82?3:shot.power>.57?2:1;
+     if(shot.stopped&&shot.air>.55){score=0}
+     if(score===4||score===6){shot.label=score===6?'SIX':'FOUR';beep(score===6?880:700,.12)}
+     else if(score===0){shot.label='DOT';beep(260,.06)}
+     else {shot.label=score+' RUN'+(score>1?'S':'');beep(500+score*70,.07)}
+     runs+=score;last=String(score);history.push(String(score));phase='ready';
+     setStatus(shot.label+'! BALL LANDED. '+(score===0?'NO RUNS.':'+'+score+' RUNS.')+' PRESS START / NEXT.');
+     drawAll();checkEnd();return
+   }
+ }
+ draw();raf=requestAnimationFrame(tick)
 }
 function swing(){
- if(phase!=='bowled'||!ball||ball.swung)return;
- ball.swung=true;
- const distance=Math.abs(ball.y-224);
- const quality=Math.max(0,1-distance/48);
- if(quality<.16){phase='ready';balls++;wickets++;last='W';setMessage('MISS! The timing was too early or too late.');updateHud();draw();checkOver();return}
- cancelAnimationFrame(raf);phase='shot';balls++;
- const power=quality>.78?rand(78,115):rand(42,76);
- const start={x:ball.x,y:ball.y};
- const endX=Math.max(16,Math.min(224,120+aim*power+rand(-18,18)));
- const endY=Math.max(25,Math.min(190,155-quality*65+rand(-22,22)));
- trail=[];
- for(let i=0;i<=34;i++){const t=i/34;trail.push({x:start.x+(endX-start.x)*t,y:start.y+(endY-start.y)*t-Math.sin(t*Math.PI)*(18+quality*16)})}
- landing={x:endX,y:endY};
- let scored;
- if(quality>.82&&Math.abs(endX-120)>76)scored=6;
- else if(quality>.65&&Math.abs(endX-120)>50)scored=4;
- else if(quality>.55)scored=3;
- else if(quality>.35)scored=2;
- else scored=1;
- runs+=scored;last=String(scored);
- setMessage((scored===6?'SIX!':scored===4?'FOUR!':'+'+scored+' RUNS!')+' Shot path and landing point displayed. Press START / NEXT.');
- updateHud();draw();checkOver();
+ if(phase!=='bowling'||!ball||ball.swung)return;
+ ball.swung=true;cancelAnimationFrame(raf);
+ const d=levels[difficulty],dist=Math.abs(ball.y-222),quality=clamp(1-dist/d.window,0,1);
+ legal++;
+ if(quality<.12){
+   wickets++;last='W';history.push('W');phase='ready';ball=null;setStatus('MISS! BAD TIMING — WICKET.');beep(160,.14);drawAll();checkEnd();return
+ }
+ const direction=aim,base=quality;
+ const variation=rand(-24,24)*(difficulty==='hard'?1.2:.75);
+ const angle=direction*0.78+variation/100;
+ const power=clamp(base*rand(.83,1.12),0,1);
+ const sx=ball.x,sy=ball.y;
+ const reach=45+power*112;
+ let ex=clamp(120+Math.sin(angle)*reach+rand(-12,12),9,231);
+ let ey=clamp(163-Math.cos(angle)*reach+rand(-14,14),12,294);
+ // Make the direction visibly matter, with central straight hits remaining possible.
+ if(direction===0)ex=clamp(120+rand(-26,26),15,225);
+ shot={sx,sy,x:sx,y:sy,ex,ey,t:0,lift:12+power*35,air:power,power,path:[],done:false,stopped:false,label:''};
+ for(let i=0;i<=40;i++){const t=i/40;shot.path.push({x:sx+(ex-sx)*t,y:sy+(ey-sy)*t-Math.sin(t*Math.PI)*(12+power*35)})}
+ ball=null;phase='flight';setStatus(quality>.82?'PERFECT TIMING! WATCH THE SHOT.':quality>.5?'GOOD CONTACT! WATCH THE FIELDERS.':'EDGED! WATCH THE BALL.');beep(quality>.82?850:550,.06);previous=0;raf=requestAnimationFrame(tick)
 }
-function checkOver(){if(balls>=18||wickets>=5){phase='over';setMessage('INNINGS COMPLETE — '+runs+' RUNS. Press NEW MATCH to play again.');draw()}}
-function start(){if(phase==='over'){setMessage('INNINGS COMPLETE. Start a NEW MATCH.');return}if(phase==='bowled'){setMessage('THE BALL IS ALREADY IN PLAY — SWING!');return}beginBall()}
-function reset(){cancelAnimationFrame(raf);runs=0;wickets=0;balls=0;aim=0;phase='ready';ball=null;trail=[];landing=null;last='—';setMessage('NEW MATCH. Press START / NEXT to bowl.');updateHud();draw()}
-document.querySelectorAll('[data-aim]').forEach(b=>b.addEventListener('click',()=>{aim=Number(b.dataset.aim);draw()}));
-$('hit').addEventListener('click',swing);$('start').addEventListener('click',start);$('reset').addEventListener('click',reset);
-canvas.addEventListener('pointerdown',e=>{if(phase==='bowled')swing();else if(phase==='ready')start()});
+function pause(){
+ if(phase==='paused'){phase=pausedFrom;previous=0;setStatus('RESUMED.');if(phase==='bowling'||phase==='flight')raf=requestAnimationFrame(tick);drawAll();return}
+ if(phase!=='bowling'&&phase!=='flight'){setStatus('NOTHING TO PAUSE RIGHT NOW.');return}
+ pausedFrom=phase;phase='paused';cancelAnimationFrame(raf);setStatus('GAME PAUSED. PRESS RESUME.');drawAll()
+}
+function chooseMode(){mode=$('mode').value;resetMatch()}
+$('mode').addEventListener('change',chooseMode);
+$('difficulty').addEventListener('change',()=>{difficulty=$('difficulty').value;setStatus('DIFFICULTY: '+difficulty.toUpperCase()+'.');hud()});
+$('start').addEventListener('click',bowl);$('reset').addEventListener('click',resetMatch);$('hit').addEventListener('click',swing);$('pause').addEventListener('click',pause);
+$('sound').addEventListener('click',()=>{sound=!sound;$('sound').textContent='SOUND: '+(sound?'ON':'OFF');if(sound)beep(660,.06)});
+$('scorecard').addEventListener('click',()=>{const summary=history.length?history.map((v,i)=>((Math.floor(i/6)+1)+'.'+(i%6+1)+' '+v)).join('  |  '):'No balls played yet.';setStatus('SCORECARD '+runs+'/'+wickets+' · '+Math.floor(legal/6)+'.'+legal%6+' OVERS · '+summary)});
+document.querySelectorAll('[data-aim]').forEach(b=>b.addEventListener('click',()=>{aim=Number(b.dataset.aim);document.querySelectorAll('[data-aim]').forEach(x=>x.classList.toggle('selected',x===b));draw()}));
+canvas.addEventListener('pointerdown',()=>{if(phase==='bowling')swing();else if(phase==='ready')bowl()});
 document.addEventListener('keydown',e=>{
- if(['ArrowLeft','ArrowRight','ArrowUp',' ','Enter'].includes(e.key))e.preventDefault();
+ const key=e.key.toLowerCase();
+ if(['arrowleft','arrowright','arrowup',' ','enter'].includes(key))e.preventDefault();
  if(e.repeat)return;
- if(e.key==='ArrowLeft'||e.key.toLowerCase()==='a'){aim=-1;draw()}
- else if(e.key==='ArrowRight'||e.key.toLowerCase()==='d'){aim=1;draw()}
- else if(e.key==='ArrowUp'||e.key.toLowerCase()==='w'){aim=0;draw()}
- else if(e.code==='Space')swing();
- else if(e.key==='Enter')start();
+ if(key==='arrowleft'||key==='a')aim=-1;
+ else if(key==='arrowright'||key==='d')aim=1;
+ else if(key==='arrowup'||key==='w')aim=0;
+ else if(e.code==='Space'){swing();return}
+ else if(key==='enter'){bowl();return}
+ else if(key==='p'){pause();return}
+ else return;
+ document.querySelectorAll('[data-aim]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.aim)===aim));draw()
 });
-updateHud();draw();
+fielders=makeFielders();resetMatch();
 })();
 </script>
 </body>
